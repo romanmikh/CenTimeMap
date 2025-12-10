@@ -1,0 +1,98 @@
+What's happening:
+    1. model focusing on the wrong region sometimes, yet assigning correct overall surv_time
+    2. it is likely sensitive to starting conditions
+    3. if initial loc value for a random bg region is low, softmin with high beta can give this patch most of the weight
+    4. this can reinforce incorrect loc assignment as model trains
+    4. "presence/absence of the sphere can be learned from sphere/bg"
+    5. loc_bias = 60.0 if it grows large to fit long surv times, it can make relative difference between short patches small, destabilising softmin
+
+Desirable features for head MLP:
+    1. centering & scaling: LayerNorm standardises patch tokens across features
+    2. bias=False to avoid constraining layers early on
+    3. GELU smoother than ReLU and may generalise better
+    4. avoid overfitting: 1-2 hidden layers is enough
+
+Factors:
+    1. peaky softmin with high head_beta = 5.0 can lock onto spurious patches early on, reduce it. It also doesn't change much from initial value during training
+    2. loc_bias = 60.0 doesn't change much duriung training, understand this
+    3. 1e3 LR with Adam can reinforce a bad pattern early on. Lower or warmup + cosine delay
+    6. on dummy keep under 20 epochs. Though low beta may want more epochs
+    7. p_i = softmin(β * (loc - median(loc))) normalises loc, so softmin focuses on relative differences!
+    8. try entropy regularisation of p_i? L_{\text{ent}} = \alpha \sum_i p_i \log p_i
+    9. model could assign one patch a low loc and an adjacent patch a much higher 1 -> spatial smoothness regulariser - penalise large differences between . L2 smoothness penalty encoruaging loc field to vary graudall across space - a fix if seeing boundaries only
+
+
+Observations: 
+    1. splitting head mlp into risk and loc MLPs didn't really work
+    2. loc bias of 50 helps if model doesn't learn without it
+    3. x = x - x.mean(dim=1, keepdim=True)  at start of head standardises across matches and destroys visualisation
+    4. Keep feat_frac=0.5 going forward.
+    5. val_loss_epoch tied to 4 things: 
+        1) feat_frac
+        2) ALPHA_CENS used to weigh censored (death unknown) results higher, so if it's 5.0, 
+            feat_frac=0.9 is same as feat_frac 0.66 (from loss POV). It gives long-living scans more 
+            weight during loss. 
+            Higher ALPHA_CENS (10.0) -> visually converges on sphere less frequently, same as feat_frac=0.1
+            use ALPHA_CENS=1 with feat_frac=0.5. -> val_loss_epoch ~= 12
+        3) & 4) VAR_INIT and TMAX: distribution width
+            lowering VAR=36 gives blurred results, though should sharpen...
+            it also straightens out all metrics in wandb, train loss flattens after 50 steps. y=x trend seen, good.
+            raising it to 169.0 gives a nice sphere but ofc isn't desirable. explore this further 
+            reducing var means being at wrong time prediction hurts more
+        val_loss_epoch should be closer to 0, but the y=x trend is more important
+
+    6. if we see val_mae_censored_epoch ~= 90, model gives t=100 - pred, so model always predicts ~10 expectancy 
+        - model overwhelmed by short life data, predicts so for all of them 
+        - vmse=90 makes sense but should be much lower, ideally between 5-20, once it predicts long times on censored cases
+
+    7. BETA_HEAD (temperature) <5.0 prevents few cubelets from hijacking attention, but 5.0 sharpens to show sphere
+        - keep at 5.0 until other problems solved, then lower. self.beta Stays at 4.8 after 50 epochs currently.
+
+    8. head heatmap is invariant to relative values of avg / high brightness in DummySet. HU units adj works fine.
+
+
+
+TODO:
+    0. reimplement AE, add dummydataset where having multiple spheres gives shorter life expectancy -> does sphere turn -ve? 
+    0. feed FiLM in at end of every transformer block
+    0. fix inversion of sphere vs BG, floor -ve values at MLP in head & get correct pred. times for all dummies
+    0. center locs in head? are maes expected? entropy penalty to p_i?
+    1. get data=dummy4 to work (sphere of avg brightness)
+    2. VAR as low as 36.0, combined with both BETA_XXXs tweaks can yield resutls that invert loc for sphere vs BG
+    2. sharpen dummy dataset boundaries of heatmap & ensure all heatmaps scale correctly with overlap
+    1. implement PolyCam
+    2. implement GT mask
+    3. & others
+    5. run all things we can visualise on all complexities of dummy data (rigorously)
+    -1. clean code
+
+
+TODO with Yiqin & Youngeun:
+    3. reducing relative error: make plot of real survival time vs predicted time, investigate from there
+
+
+Current things we can visualise:
+    1. normal interpead feature viz
+    2. viz feats @ transformer out (check if we’re just averaging D atm & explore other ways)
+    3. viz grads @ transformer in  (gradcam, ...)
+    4. viz grads @ transformer out (gradcam, ...)
+
+
+DONE:
+    5. --- make lungmask configurable from cmd line ---
+    6. --- make dummyset optionally configurable from cmd line ---
+    3. --- make 6 dummyset complexities configurable from cmd line, previously relied on ad-hoc adjustment ---
+    7. --- generate overlapping 3D lung & heatmap for David's presentation, integrate into main branch ---
+    1. --- consolidate Yiqin's branch with main
+    2. --- feed lungmask from cmd line through to attention stage
+    4. --- discuss window_tr & VQ & transformer convergence & residual link (all still done in current main)
+    5. --- check & become cofnident of Conv3dPatchEmbed
+
+
+Optimal Hyperparams:
+
+dummy1:
+dummy2:
+...
+OSIC:
+
