@@ -23,11 +23,11 @@
 
 <body>
   <h1>CenTimeMap Interactive CT Database</h1>
-  <p>Each row links to an interactive HDF5 visualisation (via myHDF5) and a direct download of the corresponding <code>.h5</code> file.</p>
+  <p>Each row links to an interactive HDF5 visualisation (via myHDF5), an interactive 3D visualisation, and a direct download of the corresponding <code>.h5</code> file.</p>
 
   <table>
     <thead>
-      <tr><th>Patient ID</th><th>Interactive CenTimeMap</th><th>Download Link</th></tr>
+      <tr><th>Patient ID</th><th>Interactive Slices</th><th>Interactive 3D</th><th>Download Link</th></tr>
     </thead>
     <tbody id="table-body"></tbody>
   </table>
@@ -36,28 +36,33 @@
     const entries = [
     {
         patient: "patient_1",
-        interactive: "https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F17879891%2Ffiles%2Fpatient_abcd1234.h5%3Fdownload%3D1",
-        download:    "https://zenodo.org/records/17879891/files/patient_abcd1234.h5?download=1",
+        slices: "https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F17886478%2Ffiles%2Fpatient_1.h5%3Fdownload%3D1",
+        vis3d: "https://htmlpreview.github.io/?https://zenodo.org/records/17886478/files/patient_1.html?download=1",
+        download: "https://zenodo.org/records/17886478/files/patient_1.h5?download=1",
     },
     {
-        patient: "patient_2",
-        interactive: "https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F17879891%2Ffiles%2Fpatient_abcd1234.h5%3Fdownload%3D1",
-        download:    "https://zenodo.org/records/17879891/files/patient_abcd1234.h5?download=1",
+        patient: "duplicate",
+        slices: "https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F17886478%2Ffiles%2Fpatient_1.h5%3Fdownload%3D1",
+        vis3d: "https://htmlpreview.github.io/?https://zenodo.org/records/17886478/files/patient_1.html?download=1",
+        download: "https://zenodo.org/records/17886478/files/patient_1.h5?download=1",
     },
     {
-        patient: "patient_3",
-        interactive: "https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F17879891%2Ffiles%2Fpatient_abcd1234.h5%3Fdownload%3D1",
-        download:    "https://zenodo.org/records/17879891/files/patient_abcd1234.h5?download=1",
+        patient: "duplicate",
+        slices: "https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F17886478%2Ffiles%2Fpatient_1.h5%3Fdownload%3D1",
+        vis3d: "https://htmlpreview.github.io/?https://zenodo.org/records/17886478/files/patient_1.html?download=1",
+        download: "https://zenodo.org/records/17886478/files/patient_1.h5?download=1",
     },
     {
-        patient: "patient_4",
-        interactive: "https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F17879891%2Ffiles%2Fpatient_abcd1234.h5%3Fdownload%3D1",
-        download:    "https://zenodo.org/records/17879891/files/patient_abcd1234.h5?download=1",
+        patient: "duplicate",
+        slices: "https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F17886478%2Ffiles%2Fpatient_1.h5%3Fdownload%3D1",
+        vis3d: "https://htmlpreview.github.io/?https://zenodo.org/records/17886478/files/patient_1.html?download=1",
+        download: "https://zenodo.org/records/17886478/files/patient_1.h5?download=1",
     },
     {
-        patient: "patient_5",
-        interactive: "https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F17879891%2Ffiles%2Fpatient_abcd1234.h5%3Fdownload%3D1",
-        download:    "https://zenodo.org/records/17879891/files/patient_abcd1234.h5?download=1",
+        patient: "duplicate",
+        slices: "https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F17886478%2Ffiles%2Fpatient_1.h5%3Fdownload%3D1",
+        vis3d: "https://htmlpreview.github.io/?https://zenodo.org/records/17886478/files/patient_1.html?download=1",
+        download: "https://zenodo.org/records/17886478/files/patient_1.h5?download=1",
     },
     ];
 
@@ -66,7 +71,8 @@
       table.innerHTML += `
         <tr>
           <td>${e.patient}</td>
-          <td><a class="button-link primary" href="${e.interactive}" target="_blank">Open interactive view</a></td>
+          <td><a class="button-link primary" href="${e.slices}" target="_blank">Open interactive view</a></td>
+          <td><a class="button-link primary" href="${e.vis3d}" target="_blank">Open interactive view</a></td>          
           <td><a class="button-link" href="${e.download}" target="_blank">Download .h5</a></td>
         </tr>`;
     });
