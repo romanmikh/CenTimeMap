@@ -10,97 +10,55 @@
       max-width: 900px;
       margin: 2rem auto;
       padding: 0 1rem;
-      line-height: 1.5;
     }
-    h1 {
-      font-size: 1.8rem;
-      margin-bottom: 0.5rem;
-    }
-    p.desc {
-      color: #555;
-      margin-bottom: 1.5rem;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 0.6rem 0.8rem;
-      text-align: left;
-      font-size: 0.95rem;
-    }
-    th {
-      background: #f5f5f5;
-      font-weight: 600;
-    }
-    tr:nth-child(even) {
-      background: #fafafa;
-    }
-    a.button-link {
-      display: inline-block;
-      padding: 0.3rem 0.7rem;
-      border-radius: 4px;
-      text-decoration: none;
-      border: 1px solid #0070f3;
-      font-size: 0.9rem;
-    }
-    a.button-link.primary {
-      background: #0070f3;
-      color: #fff;
-    }
+    table { width:100%; border-collapse:collapse; margin-top:1rem; }
+    th,td { border:1px solid #ddd; padding:0.6rem; }
+    th { background:#f5f5f5; font-weight:600; }
+    tr:nth-child(even) { background:#fafafa; }
+    a.button-link { padding:0.3rem 0.7rem; border-radius:4px; text-decoration:none; border:1px solid #0070f3; font-size:0.9rem; }
+    a.primary { background:#0070f3; color:#fff; }
   </style>
 </head>
+
 <body>
   <h1>CenTimeMap Interactive CT Database</h1>
-  <p class="desc">
-    Each row links to an interactive <strong>HDF5</strong> visualisation (via myHDF5)
-    and a direct download of the corresponding <code>.h5</code> file.
-  </p>
+  <p>Interactive viewer + direct download of each <code>.h5</code> file.</p>
 
-  <!-- table with columns: Patient ID, Interactive CenTimeMap, Download Link -->
   <table>
     <thead>
-      <tr>
-        <th>Patient ID</th>
-        <th>Interactive CenTimeMap</th>
-        <th>Download Link</th>
-      </tr>
+      <tr><th>Patient ID</th><th>Interactive CenTimeMap</th><th>Download Link</th></tr>
     </thead>
     <tbody id="table-body"></tbody>
-
-        <script>
-        /* list of all patient entriies */
-        const entries = [
-        {
-            patient: "patient_abcd1234",
-            interactive: "https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F17879891%2Ffiles%2Fpatient_abcd1234.h5%3Fdownload%3D1",
-            download:    "https://zenodo.org/records/17879891/files/patient_abcd1234.h5?download=1",
-        },
-        {
-            patient: "patient_029xkj",
-            interactive: "https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F19999999%2Ffiles%2Fpatient_029xkj.h5%3Fdownload%3D1",
-            download:    "https://zenodo.org/records/19999999/files/patient_029xkj.h5?download=1",
-        },
-        {
-            patient: "patient_ABC998",
-            interactive: "https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fsomewhere_else.org%2Ffiles%2FABC998.h5",
-            download:    "https://yourserver.com/files/ABC998.h5",
-        },
-        ];
-
-        entries.forEach(e => {
-        const row = `
-            <tr>
-            <td>${e.patient}</td>
-            <td><a class="button-link primary" href="${e.interactive}" target="_blank">Open interactive view</a></td>
-            <td><a class="button-link" href="${e.download}" target="_blank">Download .h5</a></td>
-            </tr>
-        `;
-        document.getElementById("table-body").insertAdjacentHTML("beforeend", row);
-        });
-    </script>
   </table>
+
+  <script>
+    const entries = [
+      {
+        patient:"patient_1",
+        interactive:"https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F17879891%2Ffiles%2Fpatient_abcd1234.h5%3Fdownload%3D1",
+        download:"https://zenodo.org/records/17879891/files/patient_abcd1234.h5?download=1"
+      },
+      {
+        patient:"patient_2",
+        interactive:"https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F17879891%2Ffiles%2Fpatient_abcd1234.h5%3Fdownload%3D1",
+        download:"https://zenodo.org/records/17879891/files/patient_abcd1234.h5?download=1"
+      },
+      {
+        patient:"patient_3",
+        interactive:"https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F17879891%2Ffiles%2Fpatient_abcd1234.h5%3Fdownload%3D1",
+        download:"https://zenodo.org/records/17879891/files/patient_abcd1234.h5?download=1"
+      }
+    ];
+
+    const table = document.getElementById("table-body");
+    entries.forEach(e=>{
+      table.innerHTML += `
+        <tr>
+          <td>${e.patient}</td>
+          <td><a class="button-link primary" href="${e.interactive}" target="_blank">Open interactive view</a></td>
+          <td><a class="button-link" href="${e.download}" target="_blank">Download .h5</a></td>
+        </tr>`;
+    });
+  </script>
 </body>
 </html>
