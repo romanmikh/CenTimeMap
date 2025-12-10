@@ -68,77 +68,39 @@
         <th>Download Link</th>
       </tr>
     </thead>
-    <tbody>
-      <tr>
-        <td>patient_1</td>
-        <td>
-          <a
-            class="button-link primary"
-            href="https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F17879891%2Ffiles%2Fpatient_abcd1234.h5%3Fdownload%3D1"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Open interactive view
-          </a>
-        </td>
-        <td>
-          <a
-            class="button-link"
-            href="https://zenodo.org/records/17879891/files/patient_abcd1234.h5?download=1"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Download .h5
-          </a>
-        </td>
-      </tr>
+    <tbody id="table-body"></tbody>
+
+        <script>
+        /* list of all patient entriies */
+        const entries = [
+        {
+            patient: "patient_abcd1234",
+            interactive: "https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F17879891%2Ffiles%2Fpatient_abcd1234.h5%3Fdownload%3D1",
+            download:    "https://zenodo.org/records/17879891/files/patient_abcd1234.h5?download=1",
+        },
+        {
+            patient: "patient_029xkj",
+            interactive: "https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F19999999%2Ffiles%2Fpatient_029xkj.h5%3Fdownload%3D1",
+            download:    "https://zenodo.org/records/19999999/files/patient_029xkj.h5?download=1",
+        },
+        {
+            patient: "patient_ABC998",
+            interactive: "https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fsomewhere_else.org%2Ffiles%2FABC998.h5",
+            download:    "https://yourserver.com/files/ABC998.h5",
+        },
+        ];
+
+        entries.forEach(e => {
+        const row = `
             <tr>
-        <td>patient_1</td>
-        <td>
-          <a
-            class="button-link primary"
-            href="https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F17879891%2Ffiles%2Fpatient_abcd1234.h5%3Fdownload%3D1"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Open interactive view
-          </a>
-        </td>
-        <td>
-          <a
-            class="button-link"
-            href="https://zenodo.org/records/17879891/files/patient_abcd1234.h5?download=1"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Download .h5
-          </a>
-        </td>
-      </tr>
-            <tr>
-        <td>patient_1</td>
-        <td>
-          <a
-            class="button-link primary"
-            href="https://myhdf5.hdfgroup.org/view?url=https%3A%2F%2Fzenodo.org%2Frecords%2F17879891%2Ffiles%2Fpatient_abcd1234.h5%3Fdownload%3D1"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Open interactive view
-          </a>
-        </td>
-        <td>
-          <a
-            class="button-link"
-            href="https://zenodo.org/records/17879891/files/patient_abcd1234.h5?download=1"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Download .h5
-          </a>
-        </td>
-      </tr>
-    </tbody>
+            <td>${e.patient}</td>
+            <td><a class="button-link primary" href="${e.interactive}" target="_blank">Open interactive view</a></td>
+            <td><a class="button-link" href="${e.download}" target="_blank">Download .h5</a></td>
+            </tr>
+        `;
+        document.getElementById("table-body").insertAdjacentHTML("beforeend", row);
+        });
+    </script>
   </table>
 </body>
 </html>
